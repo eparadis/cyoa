@@ -20,9 +20,14 @@
     presenter.start(now);
    };
     class Stage {
-        constructor() {
+        constructor(title, description, prompt) {
+            this.title = title;
+            this.description = description;
+            this.prompt = prompt;
+            this.choices = [];
         }
         addChoice(title, target) {
+            this.choices.push(title);
         }
     }
     class Presenter {
@@ -33,7 +38,12 @@
             const title = document.createElement('h2');
             const description = document.createElement('p');
             const prompt = document.createElement('p');
-            const choices = [1,2,3].map(choice => document.createElement('button'));
+            const choices = target.choices.map(choice => document.createElement('button'));
+
+            title.innerHTML = target.title;
+            description.innerHTML = target.description;
+            prompt.innerHTML = target.prompt;
+            choices.forEach((choice, index) => { choice.innerHTML = target.choices[index]; });
         
             this.parent.appendChild(title);
             this.parent.appendChild(description);
