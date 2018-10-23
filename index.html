@@ -5,13 +5,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>How do I get a job in UX?</title>
   <script>
-    window.onload = ()=>{
-      bodytext.innerHTML = 'weeee';
-    };
+   window.onload = ()=>{
+    const now = new Stage('Presently...', 'Your current job is no good, and you want to get a new job in UX!', 'What do you do next?');
+    const portfolio = new Stage();
+    const startup = new Stage();
+    const applyInternship = new Stage();
+    const applyMasters = new Stage();
+    now.addChoice('Work on UX portfolio', portfolio);
+    now.addChoice('Work on a startup', startup);
+    now.addChoice('Apply to UX Internship', applyInternship);
+    now.addChoice('Apply to Master\'s Degree', applyMasters);
+    
+    const presenter = new Presenter(document.getElementById('container'));
+    presenter.start(now);
+   };
+    class Stage {
+        constructor() {
+        }
+        addChoice(title, target) {
+        }
+    }
+    class Presenter {
+        constructor(parent) {
+            this.parent = parent;
+        }
+        start(target) {
+            const title = document.createElement('h2');
+            const description = document.createElement('p');
+            const prompt = document.createElement('p');
+            const choices = [1,2,3].map(choice => document.createElement('button'));
+        
+            this.parent.appendChild(title);
+            this.parent.appendChild(description);
+            this.parent.appendChild(prompt);
+            choices.forEach(choice => { this.parent.appendChild(choice); });
+        }
+    } 
   </script>
  </head>
  <body>
-  <h1>hello!</h1>
-  <p id="bodytext"></p>
+  <div id="container"></div>
  </body>
 </html>
