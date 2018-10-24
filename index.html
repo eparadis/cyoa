@@ -7,14 +7,26 @@
   <script>
    window.onload = ()=>{
     const now = new Stage('Presently...', 'Your current job is no good, and you want to get a new job in UX!', 'What do you do next?');
-    const portfolio = new Stage('Work');
-    const startup = new Stage();
+    const portfolio = new Stage('Work on portfolio', 'You focus on your UX portfolio. You write up your student projects and some new pieces too.', 'What do you do next?');
+    const startup = new Stage('Focus on startup', 'You meet some cool people and come up with an idea for a startup. You work on that for a while', 'How does that go?');
+    const sideHustle = new Stage('A fun side hustle','Your startup never makes it big, but you do produce a lot of good work. That will look good in your portfolio...', '');
+    const funded = new Stage('We got funded!', 'You quit your job to work at your new startup!', 'What do you do next?');
+    const gameOver = new Stage('Congratulations!', 'You got yourself a new job in UX. Enjoy yourself!', 'You got a new job in:<br>24 weeks<br>24% of players chose your path.<br>45% of players got a job sooner than you.<br>Most players got a new job in 5 weeks');
+    const applyJob = new Stage();
     const applyInternship = new Stage();
     const applyMasters = new Stage();
     now.addChoice('Work on UX portfolio', portfolio)
         .addChoice('Work on a startup', startup)
         .addChoice('Apply to UX Internship', applyInternship)
         .addChoice('Apply to Master\'s Degree', applyMasters);
+    startup.addChoice('We don\'t get investment but it\'s a fun side hustle.', sideHustle)
+        .addChoice('We got funded!', funded);
+    funded.addChoice('I got a new job!', gameOver);
+    gameOver.addChoice('Share my results...', gameOver);
+    sideHustle.addChoice('Add startup work to my portfolio', portfolio);
+    portfolio.addChoice('Apply to UX job', applyJob)
+        .addChoice('Apply to UX Internship', applyInternship)
+        .addChoice('Apply to Masters Program', applyMasters);
     
     const presenter = new Presenter(document.getElementById('container'));
     presenter.start(now);
