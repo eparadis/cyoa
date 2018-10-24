@@ -11,7 +11,7 @@
     const startup = new Stage('Focus on startup', 'You meet some cool people and come up with an idea for a startup. You work on that for a while', 'How does that go?');
     const sideHustle = new Stage('A fun side hustle','Your startup never makes it big, but you do produce a lot of good work. That will look good in your portfolio...', '');
     const funded = new Stage('We got funded!', 'You quit your job to work at your new startup!', 'What do you do next?');
-    const gameOver = new Stage('Congratulations!', 'You got yourself a new job in UX. Enjoy yourself!', 'You got a new job in:<br>24 weeks<br>24% of players chose your path.<br>45% of players got a job sooner than you.<br>Most players got a new job in 5 weeks');
+    const gameOver = new Stage('Congratulations!', 'You got yourself a new job in UX. Enjoy yourself!', '24% of players chose your path.<br>45% of players got a job sooner than you.<br>Most players got a new job in 5 weeks');
     const applyJob = new Stage('Apply for UX job', 'You apply for a UX job.', 'How does that turn out for you?');
     const applyMasters = new Stage('Apply for Masters program', 'You apply for the HCDE Masters program.', 'How does that turn out for you?');
     const applyInternship = new Stage('Apply for an internship', 'You apply for a UX internship at a local company.', 'How does that go?');
@@ -50,7 +50,6 @@
     internship.addChoice('Put internship work on my portfolio', portfolio)
         .addChoice('Use my internship experience to apply for a UX job', applyJob);
     
-    
     const presenter = new Presenter(document.getElementById('container'));
     presenter.start(now);
    };
@@ -61,8 +60,10 @@
             this.prompt = prompt || 'Placeholder prompt';
             this.choices = [];
         }
-        addChoice(title, target) {
-            this.choices.push({title, target});
+        addChoice(title, target, reducer) {
+            const scoreIncrementer = (state)=>({...state, score: (state.score === undefined ? 0 : state.score) + 1});
+            reducer = reducer || scoreIncrementer;
+            this.choices.push({title, target, reducer});
             return this; // for fluid interface
         }
     }
@@ -70,11 +71,16 @@
         constructor(parent) {
             this.parent = parent;
         }
-        start(target) {
+        start(target, reducer) {
+            if( reducer) {
+                this.state = this.state || {};
+                this.state = reducer(this.state);
+            }
             const title = document.createElement('h2');
             const description = document.createElement('p');
             const prompt = document.createElement('p');
             const choices = target.choices.map(choice => document.createElement('button'));
+            const status = document.createElement('p');
 
             title.innerHTML = target.title;
             description.innerHTML = target.description;
@@ -82,18 +88,28 @@
             choices.forEach((choice, index) => {
                 choice.innerHTML = target.choices[index].title;
                 choice.addEventListener('click', (e) => {
-                    this.start(target.choices[index].target);
+                    this.start(target.choices[index].target, target.choices[index].reducer);
                 });
             });
+            status.innerHTML = this.formatStatus(this.state);
         
             // Removing all children from parent
             while (this.parent.firstChild) {
                 this.parent.removeChild(this.parent.firstChild);
             }
             this.parent.appendChild(title);
+            this.parent.appendChild(status);
             this.parent.appendChild(description);
             this.parent.appendChild(prompt);
             choices.forEach(choice => { this.parent.appendChild(choice); });
+        }
+
+        formatStatus( state) {
+            if(!state) {
+                return '';
+            }
+            const score = state.score || 0;
+            return `Weeks elapased: ${score}`;
         }
     } 
   </script>
