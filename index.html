@@ -7,27 +7,28 @@
   <script>
    window.onload = ()=>{
     const now = new Stage('Presently...', 'Your current job is no good, and you want to get a new job in UX!', 'What do you do next?');
-    const portfolio = new Stage();
+    const portfolio = new Stage('Work');
     const startup = new Stage();
     const applyInternship = new Stage();
     const applyMasters = new Stage();
-    now.addChoice('Work on UX portfolio', portfolio);
-    now.addChoice('Work on a startup', startup);
-    now.addChoice('Apply to UX Internship', applyInternship);
-    now.addChoice('Apply to Master\'s Degree', applyMasters);
+    now.addChoice('Work on UX portfolio', portfolio)
+        .addChoice('Work on a startup', startup)
+        .addChoice('Apply to UX Internship', applyInternship)
+        .addChoice('Apply to Master\'s Degree', applyMasters);
     
     const presenter = new Presenter(document.getElementById('container'));
     presenter.start(now);
    };
     class Stage {
         constructor(title, description, prompt) {
-            this.title = title;
-            this.description = description;
-            this.prompt = prompt;
+            this.title = title || 'Default Title';
+            this.description = description || 'Placeholder description';
+            this.prompt = prompt || 'Placeholder prompt';
             this.choices = [];
         }
         addChoice(title, target) {
-            this.choices.push(title);
+            this.choices.push({title, target});
+            return this; // for fluid interface
         }
     }
     class Presenter {
@@ -43,8 +44,17 @@
             title.innerHTML = target.title;
             description.innerHTML = target.description;
             prompt.innerHTML = target.prompt;
-            choices.forEach((choice, index) => { choice.innerHTML = target.choices[index]; });
+            choices.forEach((choice, index) => {
+                choice.innerHTML = target.choices[index].title;
+                choice.addEventListener('click', (e) => {
+                    this.start(target.choices[index].target);
+                });
+            });
         
+            // Removing all children from parent
+            while (this.parent.firstChild) {
+                this.parent.removeChild(this.parent.firstChild);
+            }
             this.parent.appendChild(title);
             this.parent.appendChild(description);
             this.parent.appendChild(prompt);
