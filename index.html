@@ -12,9 +12,14 @@
     const sideHustle = new Stage('A fun side hustle','Your startup never makes it big, but you do produce a lot of good work. That will look good in your portfolio...', '');
     const funded = new Stage('We got funded!', 'You quit your job to work at your new startup!', 'What do you do next?');
     const gameOver = new Stage('Congratulations!', 'You got yourself a new job in UX. Enjoy yourself!', 'You got a new job in:<br>24 weeks<br>24% of players chose your path.<br>45% of players got a job sooner than you.<br>Most players got a new job in 5 weeks');
-    const applyJob = new Stage();
-    const applyInternship = new Stage();
-    const applyMasters = new Stage();
+    const applyJob = new Stage('Apply for UX job', 'You apply for a UX job.', 'How does that turn out for you?');
+    const applyMasters = new Stage('Apply for Masters program', 'You apply for the HCDE Masters program.', 'How does that turn out for you?');
+    const applyInternship = new Stage('Apply for an internship', 'You apply for a UX internship at a local company.', 'How does that go?');
+    const noProgress = new Stage('Too bad!', 'Things did\'t go as planned, did they? But at least you still have your old job.', 'Keep trying!');
+    const mastersChoice = new Stage('Choose a program type', 'You can become a full-time student or keep your day job and take evening classes.', 'Are you doing to do the program full-time or part-time?');
+    const fulltimeStudent = new Stage('Full-time student!', 'You quit your day job and take out a loan to become a full-time student.', 'What next?');
+    const parttimeStudent = new Stage('Part-time student!', 'You decide to work your way through school.', 'What do you do next?');
+    const internship = new Stage('UX Internship!', 'You quit your job and do a 3 month internship.', 'Then what do you do?');
     now.addChoice('Work on UX portfolio', portfolio)
         .addChoice('Work on a startup', startup)
         .addChoice('Apply to UX Internship', applyInternship)
@@ -27,6 +32,24 @@
     portfolio.addChoice('Apply to UX job', applyJob)
         .addChoice('Apply to UX Internship', applyInternship)
         .addChoice('Apply to Masters Program', applyMasters);
+    applyJob.addChoice('I get the job!', gameOver)
+        .addChoice('No job offer...', noProgress);
+    noProgress.addChoice('Okay', now);
+    applyMasters.addChoice('I got in!', mastersChoice)
+        .addChoice('I wasn\'t accepted...', noProgress);
+    mastersChoice.addChoice('Full-time student', fulltimeStudent)
+        .addChoice('Part-time student', parttimeStudent);
+    fulltimeStudent.addChoice('Apply for a UX job', applyJob)
+        .addChoice('Work on my portfolio', portfolio)
+        .addChoice('Apply for an internship', applyInternship);
+    parttimeStudent.addChoice('Apply for a UX job', applyJob)
+        .addChoice('Work on my portfolio', portfolio)
+        .addChoice('Apply for an internship', applyInternship);
+    applyInternship.addChoice('I got the internship!', internship)
+        .addChoice('I didn\'t make the cut...', noProgress);
+    internship.addChoice('Put internship work on my portfolio', portfolio)
+        .addChoice('Use my internship experience to apply for a UX job', applyJob);
+    
     
     const presenter = new Presenter(document.getElementById('container'));
     presenter.start(now);
